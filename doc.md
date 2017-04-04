@@ -482,7 +482,7 @@ COLOR_CHAR
 COLOR_BACK
 ```
 
-Exemple :
+Example :
 
 ```
 c
