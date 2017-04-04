@@ -337,7 +337,13 @@ class IGame
     virtual void restart() = 0;
     virtual std::vector<arc::Tile> * generateTiles(const bool all = false) = 0;
     virtual void handleEvent(const arc::eventType event) = 0;
-    const std::string & getName() const = 0;
+    virtual const std::string & getName() const = 0;
+    virtual int getMapWidth(void)  const = 0;
+    virtual int getMapHeight(void) const = 0;
+    virtual int getTXTSize(void) const = 0;
+    virtual int getPNGSize(void) const = 0;
+    virtual int getScore(void) const = 0;
+    virtual int getNbLive(void) const = 0;
 };
 
 #endif /* !IGAME_HH_ */
@@ -355,6 +361,24 @@ class IGame
 
 **const std::string & getName() const = 0;**
 :	Accessor for the game name
+
+**virtual int getMapWidth(void)  const = 0;**
+:	Accessor for the map width
+
+**virtual int getMapHeight(void) const = 0;** 
+: Accessor to the map height
+
+**virtual int getTXTSize(void) const = 0;**
+: Accessor to the size of ncurses asset
+
+**virtual int getPNGSize(void) const = 0;**
+: Accessor to the size of .png asset
+
+**virtual int getScore(void) const = 0;**
+: Accessor to the score game
+
+**virtual int getNbLive(void) const = 0;**
+: Accessor to the number of lifes in a game
 
 -----------------
 
@@ -387,6 +411,8 @@ class IGraph
     virtual void renderByLoop(void) = 0;
 
     virtual void renderMenu(void) = 0;
+	
+	virtual void renderGameOver(void) = 0;
 };
 
 #endif /* !IGRAPH_HH_ */
@@ -412,6 +438,9 @@ class IGraph
 
 **virtual void renderMenu(void) = 0;**
 :	Pauses the game by rendering the game menu
+
+**virtual void renderGameOver(void) = 0;**
+: Rendering the game over screen
 
 -----------------
 
@@ -441,3 +470,22 @@ namespace arc
 
 **RENDER_LOOP**
 :	This mode uses the graphic library main loop with a callback function to render tiles
+
+-----------------
+
+Asset file
+-------------
+
+```
+CHAR
+COLOR_CHAR
+COLOR_BACK
+```
+
+Exemple :
+
+```
+c
+123
+255
+```
