@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>doc</title>
+<link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body><div class="container"><h1 id="cpparcade-project-documentation">cpp_arcade project documentation</h1>
+
+
+
+<h2 id="resume">Resume</h2>
+
+<p>This project consists in a modular game plateform. This plateform includes at least two games and three graphic libraries. Theses libraries should be shared and be dynamically handled. Because we should validate the modularity of this project, it will be independently developped by two distinct teams. Because we must be able to share games and graphic libraries within our teams, we decided some conventions. Theses conventions are defines by several shared interfaces, structures and enumerations that will be exposed in this document.</p>
+
+<hr>
+
+
+
+<h2 id="teams">Teams</h2>
+
+<p>This documentation belongs to two teams of the Epitech Nantes Tek 2nd year.</p>
+
+<dl>
+<dt>Team 1 :  Let’s play a game</dt>
+<dd>Charles Paulet</dd>
+
+<dd>Emmanuel Robert</dd>
+
+<dd>Léo Paol</dd>
+
+<dt>Team 2 :  Insert coin</dt>
+<dd>Clovis Péridy</dd>
+
+<dd>Théophile Champion</dd>
+
+<dd>Hugo Ailleres</dd>
+</dl>
+
+<hr>
+
+
+
+<h2 id="modehh">Mode.hh</h2>
+
+<p>This file defines the different games modes that are available and mandatory.</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#ifndef MODE_HH_</span>
+<span class="hljs-preprocessor"># define MODE_HH_</span>
+
+<span class="hljs-keyword">namespace</span> arc
+{
+  <span class="hljs-keyword">enum</span> mode : <span class="hljs-keyword">int</span>
+  {
+    MODE_MENU,
+    MODE_PLAY
+  };
+};
+
+<span class="hljs-preprocessor">#endif /* !MODE_HH_ */</span></code></pre>
+
+<p>The <strong>enum Mode</strong> defines the different mode available that the program can handle</p>
+
+<dl>
+<dt><strong>MODE_MENU</strong></dt>
+<dd>An menu screen pauses the games and furnish the user some game related options</dd>
+
+<dt><strong>MODE_PLAY</strong></dt>
+<dd>The game is running</dd>
+</dl>
+
+<hr>
+
+<h2 id="icorehh">ICore.hh</h2>
+
+<p>This interface defines the way to implement the <strong>Core</strong> <br>
+The <strong>Core</strong> is the abstract class that possesses and inner link managers (<strong>LibManager, GameManager, EventManager</strong>).</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#pragma once</span>
+<span class="hljs-preprocessor">#ifndef ICORE_HH_</span>
+<span class="hljs-preprocessor"># define ICORE_HH_</span>
+<span class="hljs-preprocessor"># include "mode.hh"</span>
+
+<span class="hljs-keyword">class</span> IEventManager;
+<span class="hljs-keyword">class</span> IGameManager;
+
+<span class="hljs-keyword">class</span> ICore
+{
+  <span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~ICore() {}
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> run(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> handleEvent(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">virtual</span> IEventManager *getEventManager(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> IGameManager *getGameManager(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> ILibManager *getLibManager(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">virtual</span> arc::mode getGameMode(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">bool</span> isRunning(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> mutexLock(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> mutexUnlock(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-built_in">std</span>::<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;arc::Tile&gt;</span> *getTiles(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> setTiles(<span class="hljs-built_in">std</span>::<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;arc::Tile&gt;</span> *tiles) = <span class="hljs-number">0</span>;
+};
+
+
+<span class="hljs-preprocessor">#endif /* !ICORE_HH_ */</span></code></pre>
+
+<dl>
+<dt><strong>virtual void run(void) = 0;</strong></dt>
+<dd>Take care of the program process. It links input and output informations comming from the managers</dd>
+
+<dt><strong>virtual void handleEvent(void) const = 0;</strong></dt>
+<dd>Call libraries and games routines by handling events</dd>
+
+<dt><strong>virtual arc::mode getGameMode(void) const = 0;</strong></dt>
+<dd>Accessor one the Mode enumeration</dd>
+
+<dt><strong>virtual IEventManager *getEventManager(void) const = 0;</strong></dt>
+<dd>Accessor on the events manager</dd>
+
+<dt><strong>virtual IGameManager *getGameManager(void) const = 0;</strong></dt>
+<dd>Accessor on the game manager</dd>
+
+<dt><strong>virtual IGameManager *getLibManager(void) const = 0;</strong></dt>
+<dd>Accessor on the library manager</dd>
+
+<dt><strong>virtual bool isRunning(void) const = 0;</strong></dt>
+<dd>Accessor on the main loop condition</dd>
+
+<dt><strong>virtual void mutexLock(void) = 0;</strong></dt>
+<dd>Lock ressources by using mutex(es)</dd>
+
+<dt><strong>virtual void mutexUnlock(void) = 0;</strong></dt>
+<dd>Unlock ressources by using mutex(es)</dd>
+
+<dt><strong>virtual std::vector *getTiles(void) const = 0;</strong></dt>
+<dd>Accessor on tiles structure,</dd>
+
+<dt><strong>virtual void setTiles(std::vector *tiles) = 0;</strong></dt>
+<dd>Setter on tiles structure</dd>
+</dl>
+
+<hr>
+
+<h2 id="eventtypehh">eventType.hh</h2>
+
+<p>This is the file that defines all the different events that can occur during the program (including games).</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#pragma once</span>
+<span class="hljs-preprocessor">#ifndef EVENTTYPE_HH_</span>
+<span class="hljs-preprocessor"># define EVENTTYPE_HH_</span>
+
+<span class="hljs-keyword">namespace</span> arc
+{
+  <span class="hljs-keyword">enum</span> eventType : <span class="hljs-keyword">int</span>
+  {
+    MY_KEY_UP,
+    MY_KEY_DOWN,
+    MY_KEY_LEFT,
+    MY_KEY_RIGHT,
+    MY_KEY_PREV_GRAPH,
+    MY_KEY_NEXT_GRAPH,
+    MY_KEY_PREV_GAME,
+    MY_KEY_NEXT_GAME,
+    MY_KEY_RESTART_GAME,
+    MY_KEY_GO_BACK_MENU,
+    MY_KEY_ESCAPE,
+    MY_NONE
+  };
+};
+
+<span class="hljs-preprocessor">#endif</span></code></pre>
+
+<hr>
+
+
+
+<h2 id="ieventmanagerhh">IEventManager.hh</h2>
+
+<p>The <strong>eventManager</strong> gets and stores several events that have been sent through the graphic library.</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#pragma once</span>
+<span class="hljs-preprocessor">#ifndef IEVENTMANAGER_HH</span>
+<span class="hljs-preprocessor"># define IEVENTMANAGER_HH</span>
+
+<span class="hljs-preprocessor">#include "event.hh"</span>
+
+<span class="hljs-keyword">class</span> IEventManager
+{
+  <span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~IEventManager() {}
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">const</span> arc::eventType pullAnEvent() = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> notifyAnEvent(<span class="hljs-keyword">const</span> arc::eventType &amp;event) = <span class="hljs-number">0</span>;
+};
+
+<span class="hljs-preprocessor">#endif /* IEVENTMANAGER_HH */</span></code></pre>
+
+<dl>
+<dt><strong>virtual const arc::eventType pullAnEvent() = 0;</strong></dt>
+<dd>Retrieve, extract the last occured event</dd>
+
+<dt><strong>virtual void notifyAnEvent(const arc::eventType &amp;event) = 0;</strong></dt>
+<dd>Notify the event manager that an event occured and type it.</dd>
+</dl>
+
+<hr>
+
+
+
+<h2 id="igamemanagerhh">IGameManager.hh</h2>
+
+<p>The interface that describes the games manager. <br>
+The constructor of the abstract must open and instanciate at least one game.</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#pragma once</span>
+<span class="hljs-preprocessor">#ifndef IGAMEMANAGER_HH_</span>
+<span class="hljs-preprocessor"># define IGAMEMANAGER_HH_</span>
+
+<span class="hljs-keyword">class</span> IGameManager
+{
+  <span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~IGameManager() {}
+
+    <span class="hljs-keyword">virtual</span> IGame * getCurrentGame(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> nextGame() = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> prevGame() = <span class="hljs-number">0</span>;
+};
+
+<span class="hljs-preprocessor">#endif /* IGAMEMANAGER_HH_ */</span></code></pre>
+
+<dl>
+<dt><strong>virtual IGame * getCurrentGame(void) const = 0;</strong></dt>
+<dd>Accessor on the actual game</dd>
+
+<dt><strong>virtual void nextGame() = 0;</strong></dt>
+<dd>Load next game in order to run it directly</dd>
+
+<dt><strong>virtual void prevGame() = 0;</strong></dt>
+<dd>Load previous game in order to run it directly</dd>
+</dl>
+
+<hr>
+
+<h2 id="ilibmanagerhh">ILibManager.hh</h2>
+
+<p>The interface that describes the libraries manager. <br>
+The constructor of the abstract must open and instanciate at least one graphic library.</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#pragma once</span>
+<span class="hljs-preprocessor">#ifndef ILIBMANAGER_HH_</span>
+<span class="hljs-preprocessor"># define ILIBMANAGER_HH_</span>
+
+<span class="hljs-keyword">class</span> IGraph;
+
+<span class="hljs-keyword">class</span> ILibManager
+{
+<span class="hljs-keyword">public</span>:
+  <span class="hljs-keyword">virtual</span> ~ILibManager() {}
+
+  <span class="hljs-keyword">virtual</span> IGraph * getCurrentGFX(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+
+  <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> nextGFX() = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> prevGFX() = <span class="hljs-number">0</span>;
+};
+
+<span class="hljs-preprocessor">#endif /* ILIBMANAGER_HH_ */</span></code></pre>
+
+<dl>
+<dt><strong>virtual IGraph * getCurrentGFX(void) const = 0;</strong></dt>
+<dd>Accessor on the actual graphic library</dd>
+
+<dt><strong>virtual void nextGFX() = 0;</strong></dt>
+<dd>Load next graphic library in order to run it directly</dd>
+
+<dt><strong>virtual void prevGFX() = 0;</strong></dt>
+<dd>Load previous graphic library in order to run it directly</dd>
+</dl>
+
+<hr>
+
+<h2 id="tilehpp">Tile.hpp</h2>
+
+<p>This file describes the way that a tile should be implemented.</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#pragma once</span>
+<span class="hljs-preprocessor">#ifndef TILE_HPP_</span>
+<span class="hljs-preprocessor"># define TILE_HPP_</span>
+
+<span class="hljs-preprocessor">#include &lt;string&gt;</span>
+
+<span class="hljs-keyword">namespace</span> arc
+{
+  <span class="hljs-keyword">struct</span> Tile
+  {
+    Tile(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y, <span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> &amp;texture) : 
+    x(x), y(y), texture(texture) {}
+
+    Tile() : x(<span class="hljs-number">0</span>), y(<span class="hljs-number">0</span>), texture(<span class="hljs-string">""</span>) {}
+    ~Tile() {}
+
+    <span class="hljs-keyword">int</span>           x;
+    <span class="hljs-keyword">int</span>           y;
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>       texture;
+  };
+};
+
+<span class="hljs-preprocessor">#endif /* TILE_HPP_ */</span></code></pre>
+
+<p>A tile possesses a position (int x, int y) and the name of a texture. <br>
+This texture is manipulated as a string in order to search an asset with the corresponding name in the file system. These manipulations will not be described in this document because it is not strictly related to the games and graphics libraries that must be shared within the teams.</p>
+
+<hr>
+
+<h2 id="igamehh">IGame.hh</h2>
+
+<p>The interface that every game must implement. <br>
+<strong>eventType.hh</strong> and <strong>Tile.hpp</strong> are closely related to the game workflow</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#pragma once</span>
+<span class="hljs-preprocessor">#ifndef IGAME_HH_</span>
+<span class="hljs-preprocessor"># define IGAME_HH_</span>
+
+<span class="hljs-preprocessor"># include &lt;vector&gt;</span>
+<span class="hljs-preprocessor"># include "eventType.hh"</span>
+
+<span class="hljs-preprocessor"># include "Tile.hpp"</span>
+
+<span class="hljs-keyword">class</span> IGame
+{
+  <span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~IGame() {}
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> restart() = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-built_in">std</span>::<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;arc::Tile&gt;</span> * generateTiles(<span class="hljs-keyword">const</span> <span class="hljs-keyword">bool</span> all = <span class="hljs-keyword">false</span>) = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> handleEvent(<span class="hljs-keyword">const</span> arc::eventType event) = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> &amp; getName() <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+};
+
+<span class="hljs-preprocessor">#endif /* !IGAME_HH_ */</span></code></pre>
+
+<dl>
+<dt><strong>virtual void restart() = 0;</strong></dt>
+<dd>Restarts the game</dd>
+
+<dt><strong>virtual std::vector * generateTiles(const bool all = false) = 0;</strong></dt>
+<dd>Generates tiles. The Core should transfer them to the graphic library in order to proceed rendering</dd>
+
+<dt><strong>virtual void handleEvent(const arc::eventType event) = 0;</strong></dt>
+<dd>Events entry point for the game. The game should use the events that should be provided by the core</dd>
+
+<dd>(which are transfered from the graphic library to the event manager)</dd>
+
+<dt><strong>const std::string &amp; getName() const = 0;</strong></dt>
+<dd>Accessor for the game name</dd>
+</dl>
+
+<hr>
+
+<h2 id="igraphhh">IGraph.hh</h2>
+
+<p><strong>IGraph</strong>  must be the interface of every graphic library</p>
+
+
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#pragma once</span>
+<span class="hljs-preprocessor">#ifndef IGRAPH_HH_</span>
+<span class="hljs-preprocessor"># define IGRAPH_HH_</span>
+
+<span class="hljs-preprocessor"># include &lt;vector&gt;</span>
+<span class="hljs-preprocessor"># include "Tile.hpp"</span>
+
+<span class="hljs-keyword">class</span> IGraph
+{
+  <span class="hljs-keyword">public</span>:
+    <span class="hljs-keyword">virtual</span> ~IGraph() {}
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> openGFXContext(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> closeGFXContext(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> notifyEventManager(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> clearScreen(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> renderByFrame(<span class="hljs-built_in">std</span>::<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;Tile&gt;</span> *) = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> renderByLoop(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> renderMenu(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+};
+
+<span class="hljs-preprocessor">#endif /* !IGRAPH_HH_ */</span></code></pre>
+
+<dl>
+<dt><strong>virtual void openGFXContext(void) = 0;</strong></dt>
+<dd>Initialize graphic library context.</dd>
+
+<dt><strong>virtual void closeGFXContext(void) = 0;</strong></dt>
+<dd>Terminate graphic library context.</dd>
+
+<dt><strong>virtual void notifyEventManager(void) = 0;</strong></dt>
+<dd>Notify events manager with shared events</dd>
+
+<dt><strong>virtual void clearScreen(void) = 0;</strong></dt>
+<dd>Clears the screen while switching modes/games</dd>
+
+<dt><strong>virtual void renderByFrame(std::vector *) = 0;</strong></dt>
+<dd>Render the tiles provided by the game frame by frame</dd>
+
+<dt><strong>virtual void renderByLoop(void) = 0;</strong></dt>
+<dd>Render the tiles provided by using the graphic library main loop</dd>
+
+<dt><strong>virtual void renderMenu(void) = 0;</strong></dt>
+<dd>Pauses the game by rendering the game menu</dd>
+</dl>
+
+<hr>
+
+<h2 id="displaymodehh">displayMode.hh</h2>
+
+<p><strong>displayMode</strong> defines the different methods that can be used by the graphic library to render tiles.</p>
+
+<pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#ifndef DISPLAYMODE_HH_</span>
+<span class="hljs-preprocessor"># define DISPLAYMODE_HH_</span>
+
+<span class="hljs-keyword">namespace</span> arc
+{
+  <span class="hljs-keyword">enum</span> displayMode : <span class="hljs-keyword">int</span>
+  {
+    RENDER_FRAME,
+    RENDER_LOOP
+  };
+};
+
+<span class="hljs-preprocessor">#endif</span></code></pre>
+
+<dl>
+<dt><strong>RENDER_FRAME</strong></dt>
+<dd>Classical way to render tiles. This mode is printing frame by frame</dd>
+
+<dt><strong>RENDER_LOOP</strong></dt>
+<dd>This mode uses the graphic library main loop with a callback function to render tiles</dd>
+</dl></div></body>
+</html>
