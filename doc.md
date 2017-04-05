@@ -31,7 +31,7 @@ This documentation belongs to two teams of the Epitech Nantes Tek 2nd year.
 
 Team 1 :  Let's play a game
 :	Charles Paulet
-:	Emmanuel Robert
+:	Nicolas-Emmanuel Robert
 :	Léo Paol
 
 Team 2 :  Insert coin
