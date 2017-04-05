@@ -19,6 +19,24 @@
 
 
 
+<h2 id="summary">Summary</h2>
+
+<p>1) Mode <br>
+2) ICore <br>
+3) eventType <br>
+4) IEventManager <br>
+5) IGameManager <br>
+6) ILibManager <br>
+7) Tile <br>
+8) IGame <br>
+9) IGraph <br>
+10) displayMode <br>
+11) Asset files</p>
+
+<hr>
+
+
+
 <h2 id="teams">Teams</h2>
 
 <p>This documentation belongs to two teams of the Epitech Nantes Tek 2nd year.</p>
@@ -27,7 +45,7 @@
 <dt>Team 1 :  Let’s play a game</dt>
 <dd>Charles Paulet</dd>
 
-<dd>Emmanuel Robert</dd>
+<dd>Nicolas-Emmanuel Robert</dd>
 
 <dd>Léo Paol</dd>
 
@@ -40,8 +58,6 @@
 </dl>
 
 <hr>
-
-
 
 <h2 id="modehh">Mode.hh</h2>
 
@@ -57,7 +73,8 @@
   <span class="hljs-keyword">enum</span> mode : <span class="hljs-keyword">int</span>
   {
     MODE_MENU,
-    MODE_PLAY
+    MODE_PLAY,
+    MODE_OVER
   };
 };
 
@@ -71,6 +88,9 @@
 
 <dt><strong>MODE_PLAY</strong></dt>
 <dd>The game is running</dd>
+
+<dt><strong>MODE_OVER</strong></dt>
+<dd>The game is over</dd>
 </dl>
 
 <hr>
@@ -105,6 +125,7 @@ The <strong>Core</strong> is the abstract class that possesses and inner link ma
     <span class="hljs-keyword">virtual</span> ILibManager *getLibManager(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">virtual</span> arc::mode getGameMode(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> setGameMode(arc::mode) = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">bool</span> isRunning(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> mutexLock(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
@@ -126,6 +147,9 @@ The <strong>Core</strong> is the abstract class that possesses and inner link ma
 
 <dt><strong>virtual arc::mode getGameMode(void) const = 0;</strong></dt>
 <dd>Accessor one the Mode enumeration</dd>
+
+<dt><strong>virtual void setGameMode(arc::mode) = 0;</strong></dt>
+<dd>Set the game mode</dd>
 
 <dt><strong>virtual IEventManager *getEventManager(void) const = 0;</strong></dt>
 <dd>Accessor on the events manager</dd>
@@ -513,19 +537,25 @@ This texture is manipulated as a string in order to search an asset with the cor
 
 
 
-<h2 id="asset-file">Asset file</h2>
+<h2 id="asset-files">Asset files</h2>
+
+<p>Theses files describes the way textual assets should be displayed in our <br>
+graphical textual library. <br>
+Theses files are located in the assets directory of each game.</p>
+
+<p>This is a mock of an asset file describing the way they must be written :</p>
 
 
 
 <pre class="prettyprint"><code class=" hljs vbnet"><span class="hljs-built_in">CHAR</span>
-COLOR_CHAR
-COLOR_BACK</code></pre>
+IDENTIFIER <span class="hljs-keyword">OF</span> A COLOR PAIR</code></pre>
+
+<p>identifiers are described in the textual library code.</p>
 
 <p>Example :</p>
 
 
 
 <pre class="prettyprint"><code class=" hljs ">c
-123
-255</code></pre></div></body>
+8</code></pre></div></body>
 </html>
