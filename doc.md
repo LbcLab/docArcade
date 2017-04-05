@@ -7,6 +7,23 @@ This project consists in a modular game plateform. This plateform includes at le
 
 ----------
 
+Summary
+----------
+
+1) Mode
+2) ICore
+3) eventType
+4) IEventManager
+5) IGameManager
+6) ILibManager
+7) Tile
+8) IGame
+9) IGraph
+10) displayMode
+11) Asset files
+
+----------
+
 Teams
 ---------
 
@@ -40,7 +57,8 @@ namespace arc
   enum mode : int
   {
     MODE_MENU,
-    MODE_PLAY
+    MODE_PLAY,
+    MODE_OVER
   };
 };
 
@@ -55,6 +73,9 @@ The **enum Mode** defines the different mode available that the program can hand
 
 **MODE_PLAY**
 :	The game is running
+
+**MODE_OVER**
+:	The game is over
 
 ----------
 
@@ -85,6 +106,7 @@ class ICore
     virtual ILibManager *getLibManager(void) const = 0;
     
     virtual arc::mode getGameMode(void) const = 0;
+    virtual void setGameMode(arc::mode) = 0;
     virtual bool isRunning(void) const = 0;
 
     virtual void mutexLock(void) = 0;
@@ -108,19 +130,20 @@ class ICore
 **virtual arc::mode getGameMode(void) const = 0;**
 :	Accessor one the Mode enumeration
 
+**virtual void setGameMode(arc::mode) = 0;**
+: Set the game mode
+
 **virtual IEventManager *getEventManager(void) const = 0;**
 :	Accessor on the events manager
 
 **virtual IGameManager *getGameManager(void) const = 0;**
 :	Accessor on the game manager
 
-
 **virtual IGameManager *getLibManager(void) const = 0;**
 :	Accessor on the library manager
 
 **virtual bool isRunning(void) const = 0;**
 :	Accessor on the main loop condition
-
 
 **virtual void mutexLock(void) = 0;**
 :	Lock ressources by using mutex(es)
@@ -402,7 +425,7 @@ class IGraph
 
     virtual void openGFXContext(void) = 0;
     virtual void closeGFXContext(void) = 0;
-  
+
     virtual void notifyEventManager(void) = 0;
 
     virtual void clearScreen(void) = 0;
@@ -411,8 +434,8 @@ class IGraph
     virtual void renderByLoop(void) = 0;
 
     virtual void renderMenu(void) = 0;
-	
-	virtual void renderGameOver(void) = 0;
+
+    virtual void renderGameOver(void) = 0;
 };
 
 #endif /* !IGRAPH_HH_ */
@@ -473,19 +496,23 @@ namespace arc
 
 -----------------
 
-Asset file
+Asset files
 -------------
 
+Theses files describes the way textual assets should be displayed in our
+graphical textual library.
+Theses files are located in the assets directory of each game.
+
+This is a mock of an asset file describing the way they must be written :
 ```
 CHAR
-COLOR_CHAR
-COLOR_BACK
+IDENTIFIER OF A COLOR PAIR
 ```
+identifiers are described in the textual library code.
 
 Example :
 
 ```
 c
-123
-255
+8
 ```

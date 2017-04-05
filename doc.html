@@ -75,6 +75,8 @@
 
 <hr>
 
+
+
 <h2 id="icorehh">ICore.hh</h2>
 
 <p>This interface defines the way to implement the <strong>Core</strong> <br>
@@ -151,6 +153,8 @@ The <strong>Core</strong> is the abstract class that possesses and inner link ma
 </dl>
 
 <hr>
+
+
 
 <h2 id="eventtypehh">eventType.hh</h2>
 
@@ -259,6 +263,8 @@ The constructor of the abstract must open and instanciate at least one game.</p>
 
 <hr>
 
+
+
 <h2 id="ilibmanagerhh">ILibManager.hh</h2>
 
 <p>The interface that describes the libraries manager. <br>
@@ -298,6 +304,8 @@ The constructor of the abstract must open and instanciate at least one graphic l
 
 <hr>
 
+
+
 <h2 id="tilehpp">Tile.hpp</h2>
 
 <p>This file describes the way that a tile should be implemented.</p>
@@ -333,6 +341,8 @@ This texture is manipulated as a string in order to search an asset with the cor
 
 <hr>
 
+
+
 <h2 id="igamehh">IGame.hh</h2>
 
 <p>The interface that every game must implement. <br>
@@ -357,7 +367,13 @@ This texture is manipulated as a string in order to search an asset with the cor
     <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> restart() = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">virtual</span> <span class="hljs-built_in">std</span>::<span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt;arc::Tile&gt;</span> * generateTiles(<span class="hljs-keyword">const</span> <span class="hljs-keyword">bool</span> all = <span class="hljs-keyword">false</span>) = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> handleEvent(<span class="hljs-keyword">const</span> arc::eventType event) = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> &amp; getName() <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> &amp; getName() <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">int</span> getMapWidth(<span class="hljs-keyword">void</span>)  <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">int</span> getMapHeight(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">int</span> getTXTSize(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">int</span> getPNGSize(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">int</span> getScore(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">int</span> getNbLive(<span class="hljs-keyword">void</span>) <span class="hljs-keyword">const</span> = <span class="hljs-number">0</span>;
 };
 
 <span class="hljs-preprocessor">#endif /* !IGAME_HH_ */</span></code></pre>
@@ -376,9 +392,29 @@ This texture is manipulated as a string in order to search an asset with the cor
 
 <dt><strong>const std::string &amp; getName() const = 0;</strong></dt>
 <dd>Accessor for the game name</dd>
+
+<dt><strong>virtual int getMapWidth(void)  const = 0;</strong></dt>
+<dd>Accessor for the map width</dd>
+
+<dt><strong>virtual int getMapHeight(void) const = 0;</strong></dt>
+<dd>Accessor to the map height</dd>
+
+<dt><strong>virtual int getTXTSize(void) const = 0;</strong></dt>
+<dd>Accessor to the size of ncurses asset</dd>
+
+<dt><strong>virtual int getPNGSize(void) const = 0;</strong></dt>
+<dd>Accessor to the size of .png asset</dd>
+
+<dt><strong>virtual int getScore(void) const = 0;</strong></dt>
+<dd>Accessor to the score game</dd>
+
+<dt><strong>virtual int getNbLive(void) const = 0;</strong></dt>
+<dd>Accessor to the number of lifes in a game</dd>
 </dl>
 
 <hr>
+
+
 
 <h2 id="igraphhh">IGraph.hh</h2>
 
@@ -409,6 +445,8 @@ This texture is manipulated as a string in order to search an asset with the cor
     <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> renderByLoop(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> renderMenu(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> renderGameOver(<span class="hljs-keyword">void</span>) = <span class="hljs-number">0</span>;
 };
 
 <span class="hljs-preprocessor">#endif /* !IGRAPH_HH_ */</span></code></pre>
@@ -434,13 +472,20 @@ This texture is manipulated as a string in order to search an asset with the cor
 
 <dt><strong>virtual void renderMenu(void) = 0;</strong></dt>
 <dd>Pauses the game by rendering the game menu</dd>
+
+<dt><strong>virtual void renderGameOver(void) = 0;</strong></dt>
+<dd>Rendering the game over screen</dd>
 </dl>
 
 <hr>
 
+
+
 <h2 id="displaymodehh">displayMode.hh</h2>
 
 <p><strong>displayMode</strong> defines the different methods that can be used by the graphic library to render tiles.</p>
+
+
 
 <pre class="prettyprint"><code class="language-cpp hljs "><span class="hljs-preprocessor">#ifndef DISPLAYMODE_HH_</span>
 <span class="hljs-preprocessor"># define DISPLAYMODE_HH_</span>
@@ -462,5 +507,25 @@ This texture is manipulated as a string in order to search an asset with the cor
 
 <dt><strong>RENDER_LOOP</strong></dt>
 <dd>This mode uses the graphic library main loop with a callback function to render tiles</dd>
-</dl></div></body>
+</dl>
+
+<hr>
+
+
+
+<h2 id="asset-file">Asset file</h2>
+
+
+
+<pre class="prettyprint"><code class=" hljs vbnet"><span class="hljs-built_in">CHAR</span>
+COLOR_CHAR
+COLOR_BACK</code></pre>
+
+<p>Example :</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs ">c
+123
+255</code></pre></div></body>
 </html>
